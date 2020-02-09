@@ -1,0 +1,57 @@
+{
+	"Resources": {
+		"Ec2Instance": {
+			"Type": "AWS::EC2::Instance",
+			"Properties": {
+				"SecurityGroups": [
+					{
+						"Ref": "RoadmapSG"
+					}
+				],
+				"ImageId": "ami-0ff8a91507f77f867",
+				"InstanceType": "t2.micro",
+				"KeyName": "TLOJ-Recovered",
+				"AvailabilityZone": "us-east-1a",
+				"UserData": {
+					"Fn::Base64" : {
+						"Fn::Join" : [
+							"",
+							[
+								"#!/bin/bash\n",
+								"yum update -y\n",
+								"yum install -y httpd\n",
+								"service httpd start\n",
+								"service httpd on\n",
+								"sleep 2\n",
+								"echo -e 'Fortune-of-the-Day Coming Soon' > /var/www/html/index.html\n"
+							]
+						]
+					}
+				}
+
+			}
+		},
+		"RoadmapSG": {
+			"Type": "AWS::EC2::SecurityGroup",
+			"Properties": {
+				"GroupDescription": "Enable SSH and HTTP access via port 22 and 80",
+				"SecurityGroupIngress": [
+					{
+						"IpProtocol": "tcp",
+						"FromPort": "22",
+						"ToPort": "22",
+						"CidrIp": "0.0.0.0/0"
+					},
+					{
+						"IpProtocol": "tcp",
+						"FromPort": "80",
+						"ToPort": "80",
+						"CidrIp": "0.0.0.0/0"
+					}
+				]
+
+
+			}
+		}
+	}
+}
