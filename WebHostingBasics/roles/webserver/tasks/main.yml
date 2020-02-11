@@ -1,0 +1,29 @@
+- name: Yum Upgrade 
+  yum: name=* state=latest
+  become: yes
+
+- name: install the latest version of Apache
+  yum: name=httpd state=latest
+  become: yes
+
+- name: Start Service httpd, if not started
+  service:
+    name: httpd
+    state: started
+  become: yes
+
+- name: Enable service httpd, and not touch the state
+  service:
+    name: httpd
+    enabled: yes
+  become: yes
+
+- name: static Page
+  copy:
+    src: index.html
+    dest: /var/www/html/
+    owner: root
+    group: root
+    mode: 0644
+  become: yes
+  

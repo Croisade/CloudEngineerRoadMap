@@ -1,0 +1,4 @@
+- hosts: localhost
+  user: jamal
+  roles: 
+    - ec2launch

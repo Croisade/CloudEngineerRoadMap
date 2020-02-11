@@ -1,0 +1,36 @@
+- name: Start EC2 instance
+  ec2:
+    key_name: Sandbox
+    instance_type: t2.micro
+    image: ami-0ff8a91507f77f867
+    wait: yes
+    group: Webserver80
+    count: 1
+    vpc_subnet_id: subnet-0850b557
+    assign_public_ip: yes
+    region: "us-east-1"
+    instance_tags:
+      Name: fortune
+    volumes:
+      - device_name: /dev/xvda
+        volume_type: gp2
+        volume_size: 8
+        delete_on_termination: true
+  register: ec2
+
+- name: Add new instances to host group
+  add_host:
+    hostname: "{{ item.public_ip }}"
+    groupname: launched
+  loop: "{{ ec2.instances }}"
+
+- name: Wait for SSH to come up
+  wait_for:
+    host: "{{ item.public_dns_name }}"
+    delay: 60
+    timeout: 320
+    port: 22
+    state: started
+  with_items: "{{ ec2.instances }}"
+
+  
