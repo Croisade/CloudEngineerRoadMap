@@ -1,6 +1,8 @@
 # CloudEngineerRoadMap
 This roadmap was pulled from this [reddit post](https://www.reddit.com/r/sysadmin/comments/8inzn5/so_you_want_to_learn_aws_aka_how_do_i_learn_to_be/)
 
+I can do this list easily from the aws management console. My goal is to do it through code.
+
 Web Hosting Basics</br>
 - Deploy a EC2 VM and host a simple static "Fortune-of-the-Day Coming Soon" web page.
 - Take a snapshot of your VM, delete the VM, and deploy a new one from the snapshot. Basically disk backup + disk restore.
