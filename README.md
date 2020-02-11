@@ -1,5 +1,5 @@
 # CloudEngineerRoadMap
-This roadmap was pulled from a reddit post
+This roadmap was pulled from this [reddit post](https://www.reddit.com/r/sysadmin/comments/8inzn5/so_you_want_to_learn_aws_aka_how_do_i_learn_to_be/)
 
 Web Hosting Basics</br>
 - Deploy a EC2 VM and host a simple static "Fortune-of-the-Day Coming Soon" web page.
