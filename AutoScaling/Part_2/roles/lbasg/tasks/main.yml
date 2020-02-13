@@ -1,0 +1,76 @@
+- name: Gather EC2 Snapshot Info
+  ec2_snapshot_info:
+    filters:
+      "tag:Name": fortune
+  register: snap
+
+- name: Create an AMI from fortune
+  ec2_ami:
+    name: fortuneasg
+    state: present
+    architecture: x86_64
+    virtualization_type: hvm
+    root_device_name: /dev/xvda
+    device_mapping:
+      - device_name: /dev/xvda
+        volume_size: 8
+        snapshot_id: "{{ snap.snapshots[0].snapshot_id }}"
+        volume_type: gp2
+        delete_on_termination: true
+  register: ami
+
+- name: Create Target Group
+  elb_target_group:
+    name: fortuneTG1
+    protocol: http
+    port: 80
+    vpc_id: "{{ vpc }}"
+    state: present
+  register: target
+
+- debug: var=target
+
+- name: Create ALB
+  elb_application_lb:
+    name: lb-1
+    security_groups: "{{ group }}"
+    subnets: ["{{ vpc_subnet_c }}", "{{ vpc_subnet_b}}"]
+    listeners:
+      - Protocol: HTTP
+        Port: 80
+        DefaultActions:
+          - Type: forward
+            TargetGroupName: fortuneTG1
+  register: alb
+
+- name: Create launch config
+  ec2_lc:
+    name: lc-1
+    image_id: "{{ ami.image_id }}"
+    key_name: "{{ key_name }}"
+    region: "{{ region }}"
+    security_groups: "{{ group }}"
+    instance_type: "{{ instance_type }}"
+    assign_public_ip: yes 
+
+- name: Wait for LB to be created
+  wait_for:
+    host: "{{ alb.dns_name }}"
+    delay: 60
+    timeout: 600
+    port: 80
+    state: started
+
+- name: Create ASG
+  ec2_asg:
+    name: FortuneASG
+    launch_config_name: lc-1
+    region: "{{ region }}"
+    replace_all_instances: yes
+    target_group_arns: "{{ target.target_group_arn }}" 
+    min_size: 1
+    max_size: 1
+    desired_capacity: 1
+    vpc_zone_identifier: ["{{ vpc_subnet_c }}", "{{ vpc_subnet_b}}"]
+    tags:
+      - environment: dev

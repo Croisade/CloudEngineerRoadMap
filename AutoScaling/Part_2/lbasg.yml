@@ -1,0 +1,5 @@
+- name: Setting up loadbalancers with an asggg
+  hosts: localhost
+  user: ec2-user
+  roles:
+    - lbasg 

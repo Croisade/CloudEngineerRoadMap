@@ -1,0 +1,5 @@
+- name: Place AMI into ASG
+  hosts: localhost
+  user: ec2-user
+  roles:
+    - asgami

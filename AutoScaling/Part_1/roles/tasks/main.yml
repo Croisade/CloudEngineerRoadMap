@@ -1,0 +1,42 @@
+- name: Gather EC2 Snapshot Info
+  ec2_snapshot_info:
+    filters:
+      "tag:Name": fortune
+  reigster: snap
+
+- name: Create an AMI from fortune
+  ec2_ami:
+    name: fortuneasg
+    state: present
+    architecture: x86_64
+    virtualization_type: hvm
+    root_device_name: /dev/xvda
+    device_mapping:
+      - device_name: /dev/xvda
+        volume_size: 8
+        snapshot_id: "{{ snap.snapshots[0].snapshot_id }}"
+        volume_type: gp2
+        delete_on_termination: true
+  register: ami
+
+- name: Create launch onfig
+  ec2_lc:
+    name: lc-1
+    image_id:
+    key_name: "{{ key_name }}"
+    region: "{{ region }}"
+    security_group: "{{ group }}"
+    instance_type: "{{ instance_type }}"
+    assign_public_ip: yes 
+
+- name: Create ASG
+  ec2_asg:
+    name: FortuneASG
+    launch_config_name: 'lc-1'
+    min_size: 1
+    max_size: 1
+    desired_capacity: 1
+    availability_zones: 'us-east-1c'
+    vpc_zone_identifier: "{{ vpc_subnet_c }}"
+    tags:
+      - environment: dev

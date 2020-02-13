@@ -1,0 +1,9 @@
+key_name: Sandbox
+instance_type: t2.micro
+group: Webserver80
+region: us-east-1
+image: ami-062f7200baf2fa504
+vpc_subnet_c: subnet-0850b557
+vpc_subnet_b: subnet-b314bcfe
+vpc: vpc-870135fd
+
