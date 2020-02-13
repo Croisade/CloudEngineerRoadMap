@@ -3,4 +3,4 @@ instance_type: t2.micro
 group: Webserver80
 region: us-east-1
 image: ami-062f7200baf2fa504
-vpc_subnet_id: ami-062f7200baf2fa504
+vpc_subnet_id: subnet-0850b557
