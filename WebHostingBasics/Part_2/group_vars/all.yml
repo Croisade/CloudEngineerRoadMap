@@ -1,0 +1,4 @@
+key_name: sandbox
+instance_type: t2.micro
+security_group: Webserver80
+region: us-east-1

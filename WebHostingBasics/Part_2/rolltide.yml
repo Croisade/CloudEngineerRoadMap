@@ -1,0 +1,5 @@
+- name: rolltide
+  hosts: localhost
+  user: jamal
+  roles:
+    - snapshot
