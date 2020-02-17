@@ -1,0 +1,9 @@
+- name: Add an alias record that points to Elastic BeanStalk
+  route53:
+    state: present
+    zone: thelifeofjamal.com
+    record: cloudengineer.thelifeofjamal.com
+    type: A
+    value: fortune-env.xaphyypwnt.us-east-1.elasticbeanstalk.com.
+    alias: True
+    alias_hosted_zone_id: Z117KPS5GTRQ2G 

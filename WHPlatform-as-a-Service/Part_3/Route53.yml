@@ -1,0 +1,4 @@
+- name: Creating Route 53 record
+  hosts: localhost
+  roles:
+    - fortuneEB
